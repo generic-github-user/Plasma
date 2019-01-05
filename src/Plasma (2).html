@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>
+Plasma
+</title>
+</head>
+<body bgcolor="#FFFFFF">
+<canvas id="canvas" width="600" height="600"></canvas>
+<script type="text/javascript">
+
+	var plasmaX = [];
+	for(i=0;i<5;i++){
+		plasmaX.push(Math.random()*canvas.width);
+	}
+	var plasmaY = [];
+	for(i=0;i<5;i++){
+		plasmaY.push(Math.random()*canvas.height);
+	}
+
+	var plasmaTargetX = [];
+	for(i=0;i<plasmaX.length;i++){
+		plasmaTargetX.push(Math.random()*canvas.width);
+	}
+	var plasmaTargetY = [];
+	for(i=0;i<plasmaY.length;i++){
+		plasmaTargetY.push(Math.random()*canvas.height);
+	}
+
+	var redStrength = 0;
+	var greenStrength = 0;
+	var blueStrength = 0;
+	var alpha = 0;
+
+
+	function drawScreen(){
+
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+
+		ctx.canvas.width = window.innerWidth - 25;
+		ctx.canvas.height = window.innerHeight - 25;
+
+		{ //Clears canvas
+
+			ctx.beginPath();
+			ctx.fillStyle = "rgba(255,255,255,1)";
+
+			ctx.fillRect(0,0,canvas.width,canvas.height);
+			ctx.fill();
+
+		}
+
+		for(v=0;v<canvas.height/20;v++){
+
+			for(i=0;i<canvas.width/20;i++){ //Draws plasma
+
+				for(g=0;g<plasmaX.length;g++){
+					alpha = Math.sqrt(Math.pow(plasmaX[g]-(i*20),2)+Math.pow(plasmaY[g]-(v*20),2));
+					alpha = (500-alpha)*0.0035-1;
+					redStrength = 50;
+					greenStrength = 0;
+					blueStrength = 150;
+
+					ctx.beginPath();
+					ctx.fillStyle = "rgba("+(redStrength)+","+(greenStrength)+","+(blueStrength)+","+alpha+")";
+
+					ctx.fillRect(i*20,v*20,20,20);
+					ctx.fill();
+				}
+
+			}
+
+		}
+
+		for(p=0;p<plasmaX.length;p++){
+
+			plasmaX[p]+=Math.round((plasmaTargetX[p]-plasmaX[p])/100);
+			plasmaY[p]+=Math.round((plasmaTargetY[p]-plasmaY[p])/100);
+			if(Math.abs(plasmaX[p]-plasmaTargetX[p])<100&&Math.abs(plasmaY[p]-plasmaTargetY[p])<100){
+				plasmaTargetX[p] = Math.round(Math.random()*canvas.width);
+				plasmaTargetY[p] = Math.round(Math.random()*canvas.height);
+			}
+
+		}
+
+	}
+
+	var intervalID = window.setInterval(drawScreen,10);
+
+</script>
+
+</body>
+</html>
